@@ -10,12 +10,14 @@ import java.util.List;
 public class App {
 	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 		List<Person> lista = new LinkedList<Person>();
+		DataProcessor.parseJsonApi(lista, "https://api.myjson.com/bins/lgb9t");
 
-		String fileName = "D:/Bemeno_adat.csv";
+		/*String fileName = "D:/Bemeno_adat.csv";
 
 		String csvSeparator = ";";
 
-		DataProcessor.parseCSV(lista, fileName, csvSeparator);
+		DataProcessor.parseCSV(lista, fileName, csvSeparator);*/
+		
 
 		BubbleListSort<Person> bls = new BubbleListSort<>(new BirthDateComparator());
 		lista = bls.sort(lista);
