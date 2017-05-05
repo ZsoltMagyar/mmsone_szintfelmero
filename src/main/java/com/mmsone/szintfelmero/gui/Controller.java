@@ -156,7 +156,7 @@ public class Controller implements Initializable {
 
 	public void loadAPI() throws JSONException, IOException, ParseException {
 		clearTable();
-		DataProcessor.parseJsonApi(lista, "https://api.myjson.com/bins/lgb9t");
+		DataProcessor.parseJsonApi(lista, "http://api.myjson.com/bins/lgb9t");
 
 		int numberOfWomen = countWomen();
 		chartData = getGenderSeries(numberOfWomen);
