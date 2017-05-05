@@ -52,7 +52,6 @@ public abstract class DataProcessor {
 	public static void parseCSV(List<Person> lista, String fileName, String csvSeparator)
 			throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
 		String line;
-		int i = 0;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
 
@@ -73,10 +72,7 @@ public abstract class DataProcessor {
 
 				lista.add(new Person(name, gender, birthDate, birthPlace, taxNumber));
 			}
-			i++;
 		}
-		System.out.println("A megfelelő rekordok(személyek) száma: " + lista.size());
-		System.out.println("Hibás sorok száma: " + (i - lista.size()) + "\n");
 		br.close();
 	}
 

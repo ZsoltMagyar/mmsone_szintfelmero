@@ -30,6 +30,10 @@ public class InsertionListSort<T> implements IListSorter<T> {
 			}
 			result.add(slot, currentPerson);
 		}
+		list.clear();
+		for(T t : result){
+			list.add(t);
+		}
 		return result;
 	}
 

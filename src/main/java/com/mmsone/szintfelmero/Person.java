@@ -40,7 +40,7 @@ public class Person {
 		this.gender = gender;
 	}
 
-	public Date getBirthDate() {
+	public Date getBirthDate(){
 		return birthDate;
 	}
 
@@ -66,9 +66,9 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Név: " + this.getName() + "\nNem: " + this.getGender() + "\nSzületési idő: "
-				+ new SimpleDateFormat("yyyy.mm.dd").format(this.getBirthDate()) + "\nSzületési hely: "
-				+ this.getBirthPlace() + "\nAdószám: " + this.getTaxNumber() + "\n";
+		return  this.getName() + ";" + this.getGender() + ";"
+				+ new SimpleDateFormat("yyyy.mm.dd").format(this.getBirthDate()) + ";"
+				+ this.getBirthPlace() + ";" + this.getTaxNumber() + "\n";
 	}
 
 }
