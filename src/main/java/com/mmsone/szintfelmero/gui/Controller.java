@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -102,27 +103,33 @@ public class Controller implements Initializable {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		});
 	}
 
-	private void setInfoLabelText(Person p) throws IOException {
+	private void setInfoLabelText(Person p) throws IOException, ParseException {
 		String txt = "";
-		txt += p.getName() +"\n";
-		
-		URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q={"+ p.getBirthPlace() +"}&appid=592ff1f3e758d14e209c1ee0483ae763");
+		txt += p.getName() + "\n";
+
+		URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q={" + p.getBirthPlace()
+				+ "}&appid=592ff1f3e758d14e209c1ee0483ae763");
 		URLConnection connection = url.openConnection();
 		JSONTokener tokener = new JSONTokener(new InputStreamReader(connection.getInputStream()));
 		JSONObject jobj = new JSONObject(tokener);
 		JSONArray jsonArray = new JSONArray(jobj.get("weather").toString());
-		
+
 		Iterator<?> it = jsonArray.iterator();
 		String description = "";
 		while (it.hasNext()) {
 			JSONObject obj = new JSONObject(it.next().toString());
 			description += obj.get("description").toString();
 		}
-		txt += "Birth Place: " + p.getBirthPlace() +"\nWeather in " + p.getBirthPlace()+ ": " +  description;
+
+		txt += "Birth Place: " + p.getBirthPlace() + "\nWeather in " + p.getBirthPlace() + ": " + description + "\nCheckSum is (nem működik :( ): "
+				+ validateTaxNumber(p.getTaxNumber(), p);
 		infoLabel.setText(txt);
 	}
 
@@ -212,7 +219,7 @@ public class Controller implements Initializable {
 			ilsByBDate.sort(lista);
 			oList = FXCollections.observableList(lista);
 			break;
-		case "Java built-in sort by name" :
+		case "Java built-in sort by name":
 			Collections.sort(lista, new NameComparator());
 			oList = FXCollections.observableList(lista);
 			break;
@@ -238,6 +245,44 @@ public class Controller implements Initializable {
 		oList = FXCollections.observableList(primeList);
 		table.setItems(oList);
 		table.refresh();
+	}
+
+	private boolean validateTaxNumber(String taxNumber, Person p) throws ParseException {
+		StringBuilder sb = new StringBuilder(taxNumber);
+		if ((sb.charAt(0)) != '8')
+			return false;
+
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.mm.dd");
+
+		Date date = p.getBirthDate();
+		cal1.setTime(date);
+		date = sdf.parse("1967.02.13");
+		cal2.setTime(date);
+
+		int days = daysBetween(cal1.getTime(), cal2.getTime());
+		System.out.println();
+		if (!sb.subSequence(2, 6).equals(days)) {
+			System.out.println("2-6 nem egyenlő");
+			return false;
+		}
+		if (Integer.parseInt(sb.subSequence(7, 9).toString()) != 0)
+			return false;
+		int checkSum = 0;
+		checkSum += Integer.valueOf(sb.charAt(0)) + Integer.valueOf(sb.charAt(1)) * 2
+				+ Integer.valueOf(sb.charAt(2)) * 3 + Integer.valueOf(sb.charAt(3)) * 4
+				+ Integer.valueOf(sb.charAt(4)) * 5 + Integer.valueOf(sb.charAt(5)) * 6
+				+ Integer.valueOf(sb.charAt(6)) * 7 + Integer.valueOf(sb.charAt(7)) * 8
+				+ Integer.valueOf(sb.charAt(8)) * 9;
+		checkSum %= 11;
+		if (Integer.valueOf(sb.charAt(9)) == checkSum)
+			return true;
+		return false;
+	}
+
+	public int daysBetween(Date d1, Date d2) {
+		return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
 	}
 
 	private boolean isPrime(int n) {
